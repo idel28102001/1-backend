@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  db:
+    container_name: autotele_db_2
+    image: postgres:14
+    environment:
+      POSTGRES_USER: '${DB_USERNAME}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD}'
+      POSTGRES_DB: '${DB_NAME}'
+    ports:
+      - "5434:5432"
+    volumes:
+      - autotele_backend_pgdata:/var/lib/postgresql/data
+    restart: always
+
+  redis:
+    container_name: autotele_redis
+    image: redis:6
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - autotele_backend_redisdata:/data
+    restart: always
+  backend:
+    build:
+      context: .
+    ports:
+      - 3005:3000
+    volumes:
+      - ./upload:/usr/src/app/upload
+    depends_on:
+      - db
+      - redis
+    restart: always
+
+
+volumes:
+  autotele_backend_pgdata:
+  autotele_backend_redisdata:

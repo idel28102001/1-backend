@@ -1,0 +1,9 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsMobilePhone, IsNotEmpty } from 'class-validator';
+
+export class CheckExistingPhoneDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsMobilePhone()
+  phone: string;
+}
